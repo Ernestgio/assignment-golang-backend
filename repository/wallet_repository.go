@@ -14,7 +14,7 @@ type WalletRepository interface {
 	Topup(walletId int, topUpAmt int, sourceOfFundId int, description string) (*dto.TopUpResponseDto, error)
 }
 
-type WalletRepositoryImpl struct {
+type walletRepositoryImpl struct {
 	db *gorm.DB
 }
 
@@ -23,10 +23,10 @@ type WalletRepositoryConfig struct {
 }
 
 func NewWalletRepository(cfg *WalletRepositoryConfig) WalletRepository {
-	return &WalletRepositoryImpl{db: cfg.DB}
+	return &walletRepositoryImpl{db: cfg.DB}
 }
 
-func (w *WalletRepositoryImpl) GetWalletById(id int) (*entity.Wallet, error) {
+func (w *walletRepositoryImpl) GetWalletById(id int) (*entity.Wallet, error) {
 	wallet := &entity.Wallet{}
 	res := w.db.Preload("User").Where("id = ?", id).First(wallet)
 	if res.RowsAffected == appconstants.NoRowsAffected {
@@ -35,7 +35,7 @@ func (w *WalletRepositoryImpl) GetWalletById(id int) (*entity.Wallet, error) {
 	return wallet, res.Error
 }
 
-func (w *WalletRepositoryImpl) Topup(walletId int, topUpAmt int, sourceOfFundId int, description string) (*dto.TopUpResponseDto, error) {
+func (w *walletRepositoryImpl) Topup(walletId int, topUpAmt int, sourceOfFundId int, description string) (*dto.TopUpResponseDto, error) {
 	err := w.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Model(&entity.Wallet{}).Where("id = ?", walletId).Update("amount", gorm.Expr("amount + ?", topUpAmt)).Error; err != nil {
 			return err

@@ -6,8 +6,6 @@ const (
 	ZeroBalance    = 0
 	NoSourceOfFund = 0
 	NoSourceWallet = 0
-	MinTopUpAmt    = 50000
-	MaxTopUpAmt    = 10000000
 
 	// JWT
 	DaysTokenActive = 30
@@ -19,8 +17,18 @@ const (
 	// Topup Status Description
 	TopupUncertain = ""
 	TopupSuccess   = "Success"
-	TopupFailed    = "Failed"
 
 	// Description for Topup
 	TopupDescription = "Top Up from %v"
+
+	// List of Transactions Query Params Key
+	TransactionSortOrderKey  = "sortBy"
+	TransactionSortColumnKey = "sort"
+	TransactionSearchKey     = "s"
+
+	// List of Transactions Default Query Params Value
+	TransactionDefaultLimit      = 10
+	TransactionDefaultSortColumn = "created_at"
+	TransactionDefaultSortOrder  = "desc"
+	TransactionDefaultSearch     = ""
 )

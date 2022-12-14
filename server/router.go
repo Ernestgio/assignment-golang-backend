@@ -10,15 +10,17 @@ import (
 )
 
 type RouterConfig struct {
-	UserUsecase   usecase.UserUsecase
-	WalletUsecase usecase.WalletUsecase
+	UserUsecase        usecase.UserUsecase
+	WalletUsecase      usecase.WalletUsecase
+	TransactionUsecase usecase.TransactionUsecase
 }
 
 func NewRouter(cfg *RouterConfig) *gin.Engine {
 	router := gin.Default()
 	h := handler.New(&handler.Config{
-		UserUsecase:   cfg.UserUsecase,
-		WalletUsecase: cfg.WalletUsecase,
+		UserUsecase:        cfg.UserUsecase,
+		WalletUsecase:      cfg.WalletUsecase,
+		TransactionUsecase: cfg.TransactionUsecase,
 	})
 
 	m := middleware.NewMiddleware(&middleware.MiddlewareConfig{HashUtil: hashutils.NewHashUtils()})
@@ -35,6 +37,7 @@ func NewRouter(cfg *RouterConfig) *gin.Engine {
 	transactionGroup := router.Group("/transactions")
 	transactionGroup.Use(m.AuthMiddleware())
 	{
+		transactionGroup.GET("/", h.GetTransactionWithParams)
 		transactionGroup.POST("/topup", m.TopupMiddleware(), h.Topup)
 	}
 

@@ -12,7 +12,7 @@ type SourceOfFundRepository interface {
 	GetSourceOfFundById(id int) (*entity.SourceOfFund, error)
 }
 
-type SourceOfFundRepositoryImpl struct {
+type sourceOfFundRepositoryImpl struct {
 	db *gorm.DB
 }
 
@@ -21,10 +21,10 @@ type SourceOfFundRepositoryConfig struct {
 }
 
 func NewSourceOfFundRepository(cfg *SourceOfFundRepositoryConfig) SourceOfFundRepository {
-	return &SourceOfFundRepositoryImpl{db: cfg.DB}
+	return &sourceOfFundRepositoryImpl{db: cfg.DB}
 }
 
-func (s *SourceOfFundRepositoryImpl) GetSourceOfFundById(id int) (*entity.SourceOfFund, error) {
+func (s *sourceOfFundRepositoryImpl) GetSourceOfFundById(id int) (*entity.SourceOfFund, error) {
 	sourceOfFund := &entity.SourceOfFund{}
 	res := s.db.Where("id = ?", id).First(sourceOfFund)
 	if res.RowsAffected == appconstants.NoRowsAffected {
