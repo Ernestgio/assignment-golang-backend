@@ -10,13 +10,15 @@ import (
 )
 
 type RouterConfig struct {
-	UserUsecase usecase.UserUsecase
+	UserUsecase   usecase.UserUsecase
+	WalletUsecase usecase.WalletUsecase
 }
 
 func NewRouter(cfg *RouterConfig) *gin.Engine {
 	router := gin.Default()
 	h := handler.New(&handler.Config{
-		UserUsecase: cfg.UserUsecase,
+		UserUsecase:   cfg.UserUsecase,
+		WalletUsecase: cfg.WalletUsecase,
 	})
 
 	m := middleware.NewMiddleware(&middleware.MiddlewareConfig{HashUtil: hashutils.NewHashUtils()})
@@ -28,6 +30,12 @@ func NewRouter(cfg *RouterConfig) *gin.Engine {
 	userGroup.Use(m.AuthMiddleware())
 	{
 		userGroup.GET("/", h.GetUserById)
+	}
+
+	transactionGroup := router.Group("/transactions")
+	transactionGroup.Use(m.AuthMiddleware())
+	{
+		transactionGroup.POST("/topup", m.TopupMiddleware(), h.Topup)
 	}
 
 	router.NoRoute(h.HandleNotFound)

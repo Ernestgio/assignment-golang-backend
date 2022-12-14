@@ -19,8 +19,16 @@ func CreateRouter() *gin.Engine {
 		HashUtil:       hashutils.NewHashUtils(),
 	})
 
+	sourceOfFundRepo := repository.NewSourceOfFundRepository(&repository.SourceOfFundRepositoryConfig{DB: db.Get()})
+	walletRepo := repository.NewWalletRepository(&repository.WalletRepositoryConfig{DB: db.Get()})
+	walletUsecase := usecase.NewWalletUsecase(&usecase.WalletUConfig{
+		WalletRepository:       walletRepo,
+		SourceOfFundRepository: sourceOfFundRepo,
+	})
+
 	return NewRouter(&RouterConfig{
-		UserUsecase: userUsecase,
+		UserUsecase:   userUsecase,
+		WalletUsecase: walletUsecase,
 	})
 }
 

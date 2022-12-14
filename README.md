@@ -4,8 +4,14 @@
 ### Done Requirements
 
 
-Authentication and Authorization
+* Authentication and Authorization
   - Register
   - Login 
 
-Users detail With Auth Middleware
+- Topup
+  - Credit to Wallet
+  - Amount validation
+  - Description formatting
+  - Record to transactions
+  
+* Users detail With Auth Middleware

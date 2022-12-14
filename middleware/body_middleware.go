@@ -19,3 +19,14 @@ func (m *Middleware) LoginRegisterMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func (m *Middleware) TopupMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var request dto.TopupRequestDto
+		if err := c.ShouldBindBodyWith(&request, binding.JSON); err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": sentinelerrors.ErrInvalidRequestBody.Error()})
+			return
+		}
+		c.Next()
+	}
+}

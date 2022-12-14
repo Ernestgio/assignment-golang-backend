@@ -10,16 +10,19 @@ import (
 )
 
 type Handler struct {
-	userUsecase usecase.UserUsecase
+	userUsecase   usecase.UserUsecase
+	walletUsecase usecase.WalletUsecase
 }
 
 type Config struct {
-	UserUsecase usecase.UserUsecase
+	UserUsecase   usecase.UserUsecase
+	WalletUsecase usecase.WalletUsecase
 }
 
 func New(cfg *Config) *Handler {
 	return &Handler{
-		userUsecase: cfg.UserUsecase,
+		userUsecase:   cfg.UserUsecase,
+		walletUsecase: cfg.WalletUsecase,
 	}
 }
 

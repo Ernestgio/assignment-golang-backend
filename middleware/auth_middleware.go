@@ -21,7 +21,7 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 					return
 				}
 				c.Set("userId", claim.Id)
-				c.Set("WalletId", claim.WalletId)
+				c.Set("walletId", claim.WalletId)
 				c.Next()
 				return
 			}
