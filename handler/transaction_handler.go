@@ -13,7 +13,7 @@ func (h *Handler) GetTransactionWithParams(c *gin.Context) {
 	sortColumn := c.DefaultQuery(appconstants.TransactionSortColumnKey, appconstants.TransactionDefaultSortColumn)
 	sortBy := c.DefaultQuery(appconstants.TransactionSortOrderKey, appconstants.TransactionDefaultSortOrder)
 
-	transactions, err := h.transactionUsecase.GetWithParams(sortColumn, sortBy, searchKey, appconstants.TransactionDefaultLimit)
+	transactions, err := h.transactionUsecase.GetWithParams(sortColumn, sortBy, searchKey, appconstants.TransactionDefaultLimit, c.GetInt("walletId"))
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, err.Error())
 		return

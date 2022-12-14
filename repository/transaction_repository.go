@@ -7,7 +7,7 @@ import (
 )
 
 type TransactionRepository interface {
-	GetWithParams(sortBy string, sortDirection string, searchQuery string, limit int) ([]*entity.Transaction, error)
+	GetWithParams(sortBy string, sortDirection string, searchQuery string, limit int, walletId int) ([]*entity.Transaction, error)
 }
 
 type transactionRepositoryImpl struct {
@@ -22,9 +22,9 @@ func NewTransactionRepository(cfg *TransactionRepositoryConfig) TransactionRepos
 	return &transactionRepositoryImpl{db: cfg.DB}
 }
 
-func (s *transactionRepositoryImpl) GetWithParams(sortBy string, sortDirection string, searchQuery string, limit int) ([]*entity.Transaction, error) {
+func (s *transactionRepositoryImpl) GetWithParams(sortBy string, sortDirection string, searchQuery string, limit int, walletId int) ([]*entity.Transaction, error) {
 	transactions := []*entity.Transaction{}
-	res := s.db.Where("description ILIKE ?", "%"+searchQuery+"%").Order(gorm.Expr("? ?", sortBy, sortDirection)).Limit(limit).Find(&transactions)
+	res := s.db.Where("description ILIKE ?", "%"+searchQuery+"%").Where("source_wallet_id = ? OR destination_wallet_id = ?", walletId, walletId).Order(gorm.Expr("? ?", sortBy, sortDirection)).Limit(limit).Find(&transactions)
 	return transactions, res.Error
 
 }

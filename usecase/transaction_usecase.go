@@ -6,7 +6,7 @@ import (
 )
 
 type TransactionUsecase interface {
-	GetWithParams(sortBy string, sortDirection string, searchQuery string, limit int) ([]*entity.Transaction, error)
+	GetWithParams(sortBy string, sortDirection string, searchQuery string, limit int, walletId int) ([]*entity.Transaction, error)
 }
 
 type transactionUseCaseImpl struct {
@@ -21,6 +21,6 @@ func NewTransactionUsecase(cfg *TransactionUConfig) TransactionUsecase {
 	return &transactionUseCaseImpl{transactionRepository: cfg.TransactionRepository}
 }
 
-func (u *transactionUseCaseImpl) GetWithParams(sortBy string, sortDirection string, searchQuery string, limit int) ([]*entity.Transaction, error) {
-	return u.transactionRepository.GetWithParams(sortBy, sortDirection, searchQuery, limit)
+func (u *transactionUseCaseImpl) GetWithParams(sortBy string, sortDirection string, searchQuery string, limit int, walletId int) ([]*entity.Transaction, error) {
+	return u.transactionRepository.GetWithParams(sortBy, sortDirection, searchQuery, limit, walletId)
 }
