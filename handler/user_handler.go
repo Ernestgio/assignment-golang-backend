@@ -44,3 +44,13 @@ func (h *Handler) Login(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, token)
 }
+
+func (h *Handler) GetUserById(c *gin.Context) {
+	id := c.GetInt("userId")
+	user, err := h.userUsecase.GetUserById(id)
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, user)
+}

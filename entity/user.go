@@ -9,7 +9,7 @@ import (
 type User struct {
 	gorm.Model `json:"-"`
 	ID         int     `gorm:"primary_key"  json:"id"`
-	Email      string  `json:"name"`
+	Email      string  `json:"email"`
 	Password   string  `json:"-"`
 	Wallet     *Wallet `gorm:"foreignKey:UserId" json:"wallet,omitempty"`
 }

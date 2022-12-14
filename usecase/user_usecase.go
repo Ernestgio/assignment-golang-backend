@@ -11,6 +11,7 @@ import (
 type UserUsecase interface {
 	Register(request *dto.UserDto) (*entity.User, error)
 	Login(request *dto.UserDto) (*dto.LoginResponse, error)
+	GetUserById(id int) (*entity.User, error)
 }
 
 type userUsecaseImpl struct {
@@ -58,4 +59,8 @@ func (u *userUsecaseImpl) Login(request *dto.UserDto) (*dto.LoginResponse, error
 		return token, nil
 	}
 	return nil, sentinelerrors.ErrInvalidPassword
+}
+
+func (u *userUsecaseImpl) GetUserById(id int) (*entity.User, error) {
+	return u.userRepository.GetUserById(id)
 }

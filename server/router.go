@@ -2,6 +2,7 @@ package server
 
 import (
 	"assignment-golang-backend/handler"
+	"assignment-golang-backend/hashutils"
 	"assignment-golang-backend/middleware"
 	"assignment-golang-backend/usecase"
 
@@ -18,10 +19,16 @@ func NewRouter(cfg *RouterConfig) *gin.Engine {
 		UserUsecase: cfg.UserUsecase,
 	})
 
-	m := middleware.NewMiddleware()
+	m := middleware.NewMiddleware(&middleware.MiddlewareConfig{HashUtil: hashutils.NewHashUtils()})
 
 	router.POST("/register", m.LoginRegisterMiddleware(), h.Register)
 	router.POST("/login", m.LoginRegisterMiddleware(), h.Login)
+
+	userGroup := router.Group("/users")
+	userGroup.Use(m.AuthMiddleware())
+	{
+		userGroup.GET("/", h.GetUserById)
+	}
 
 	router.NoRoute(h.HandleNotFound)
 	return router

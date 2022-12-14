@@ -12,6 +12,7 @@ type UserRepository interface {
 	IsUserWithEmailExist(email string) bool
 	Register(newUser *entity.User) (*entity.User, error)
 	GetUserByEmail(email string) (*entity.User, error)
+	GetUserById(id int) (*entity.User, error)
 }
 type userRepositoryImpl struct {
 	db *gorm.DB
@@ -54,5 +55,11 @@ func (u *userRepositoryImpl) GetUserByEmail(email string) (*entity.User, error) 
 	user := &entity.User{}
 	err := u.db.Preload("Wallet").Where("email = ?", email).First(user).Error
 	fmt.Println(user)
+	return user, err
+}
+
+func (u *userRepositoryImpl) GetUserById(id int) (*entity.User, error) {
+	user := &entity.User{}
+	err := u.db.Preload("Wallet").Where("id = ?", id).First(user).Error
 	return user, err
 }

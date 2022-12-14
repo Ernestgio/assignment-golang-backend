@@ -15,6 +15,7 @@ type HashUtils interface {
 	HashAndSalt(password string) (string, error)
 	ComparePassword(hashedPwd string, inputPwd string) bool
 	GenerateAccessToken(user *entity.User) (*dto.LoginResponse, error)
+	ValidateToken(tokenString string) (*dto.UserClaim, error)
 }
 
 type hashUtilsImpl struct{}
@@ -50,4 +51,17 @@ func (u *hashUtilsImpl) GenerateAccessToken(user *entity.User) (*dto.LoginRespon
 		return nil, err
 	}
 	return &dto.LoginResponse{AccessToken: tokenString}, nil
+}
+
+func (u *hashUtilsImpl) ValidateToken(tokenString string) (*dto.UserClaim, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &dto.UserClaim{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(config.SecretKey), nil
+	})
+
+	if ve, ok := err.(*jwt.ValidationError); ok {
+		return nil, ve
+	}
+	claim := token.Claims.(*dto.UserClaim)
+
+	return claim, nil
 }

@@ -1,7 +1,17 @@
 package middleware
 
-type middleware struct{}
+import "assignment-golang-backend/hashutils"
 
-func NewMiddleware() *middleware {
-	return &middleware{}
+type Middleware struct {
+	hashUtils hashutils.HashUtils
+}
+
+type MiddlewareConfig struct {
+	HashUtil hashutils.HashUtils
+}
+
+func NewMiddleware(cfg *MiddlewareConfig) *Middleware {
+	return &Middleware{
+		hashUtils: cfg.HashUtil,
+	}
 }

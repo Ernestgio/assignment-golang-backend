@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 )
 
-func (m *middleware) LoginRegisterMiddleware() gin.HandlerFunc {
+func (m *Middleware) LoginRegisterMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var request dto.UserDto
 		if err := c.ShouldBindBodyWith(&request, binding.JSON); err != nil {
