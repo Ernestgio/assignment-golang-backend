@@ -58,8 +58,8 @@ func (u *walletUsecaseImpl) Transfer(sourceWalletId int, transferDto *dto.Transf
 		return nil, sentinelerrors.ErrInsufficientBalance
 	}
 
-	_, err = u.walletRepository.GetWalletById(transferDto.To)
-	if err != nil {
+	_, destError := u.walletRepository.GetWalletById(transferDto.To)
+	if destError != nil {
 		return nil, sentinelerrors.ErrDestinationWalletNotExists
 	}
 
