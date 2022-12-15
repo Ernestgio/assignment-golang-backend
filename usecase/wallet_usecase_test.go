@@ -94,64 +94,74 @@ func TestTopup(t *testing.T) {
 
 func TestTransfer(t *testing.T) {
 	testCases := []struct {
-		name                 string
-		sourceWalletId       int
-		DestionationWalletId int
-		transferDto          *dto.TransferDto
-		firstMockResult      *entity.Wallet
-		firstMockErr         error
-		thirdMockResult      *dto.TransferDto
-		thirdMockErr         error
-		expectedResult       *dto.TransferDto
-		expectedErr          error
+		name                string
+		sourceWalletId      int
+		DestinationWalletId int
+		transferDto         *dto.TransferDto
+		firstMockResult     *entity.Wallet
+		firstMockErr        error
+		secondMockResult    *entity.Wallet
+		secondMockErr       error
+		thirdMockResult     *dto.TransferDto
+		thirdMockErr        error
+		expectedResult      *dto.TransferDto
+		expectedErr         error
 	}{
 		{
-			name:                 "should return apropriate response and nil error when transfer successful and all repo successful",
-			sourceWalletId:       0,
-			DestionationWalletId: 0,
-			transferDto:          &dto.TransferDto{},
-			firstMockResult:      &entity.Wallet{},
-			firstMockErr:         nil,
-			thirdMockResult:      &dto.TransferDto{},
-			thirdMockErr:         nil,
-			expectedResult:       &dto.TransferDto{},
-			expectedErr:          nil,
+			name:                "should return apropriate response and nil error when transfer successful and all repo successful",
+			sourceWalletId:      0,
+			DestinationWalletId: 0,
+			transferDto:         &dto.TransferDto{},
+			firstMockResult:     &entity.Wallet{},
+			firstMockErr:        nil,
+			secondMockResult:    &entity.Wallet{},
+			secondMockErr:       nil,
+			thirdMockResult:     &dto.TransferDto{},
+			thirdMockErr:        nil,
+			expectedResult:      &dto.TransferDto{},
+			expectedErr:         nil,
 		},
 		{
-			name:                 "should return nil response and error when get source wallet failed",
-			sourceWalletId:       0,
-			DestionationWalletId: 0,
-			transferDto:          &dto.TransferDto{},
-			firstMockResult:      nil,
-			firstMockErr:         sentinelerrors.ErrWalletNotExists,
-			thirdMockResult:      &dto.TransferDto{},
-			thirdMockErr:         nil,
-			expectedResult:       nil,
-			expectedErr:          sentinelerrors.ErrWalletNotExists,
+			name:                "should return nil response and error when get source wallet failed",
+			sourceWalletId:      0,
+			DestinationWalletId: 0,
+			transferDto:         &dto.TransferDto{},
+			firstMockResult:     nil,
+			firstMockErr:        sentinelerrors.ErrWalletNotExists,
+			thirdMockResult:     &dto.TransferDto{},
+			secondMockResult:    &entity.Wallet{},
+			secondMockErr:       nil,
+			thirdMockErr:        nil,
+			expectedResult:      nil,
+			expectedErr:         sentinelerrors.ErrWalletNotExists,
 		},
 		{
-			name:                 "should return nil response and error when ballance less than transfer amount",
-			sourceWalletId:       0,
-			DestionationWalletId: 0,
-			transferDto:          &dto.TransferDto{Amount: 1000000},
-			firstMockResult:      &entity.Wallet{Amount: 20000},
-			firstMockErr:         nil,
-			thirdMockResult:      nil,
-			thirdMockErr:         nil,
-			expectedResult:       nil,
-			expectedErr:          sentinelerrors.ErrInsufficientBalance,
+			name:                "should return nil response and error when balance less than transfer amount",
+			sourceWalletId:      0,
+			DestinationWalletId: 0,
+			transferDto:         &dto.TransferDto{Amount: 1000000},
+			firstMockResult:     &entity.Wallet{Amount: 20000},
+			firstMockErr:        nil,
+			secondMockResult:    &entity.Wallet{},
+			secondMockErr:       nil,
+			thirdMockResult:     nil,
+			thirdMockErr:        nil,
+			expectedResult:      nil,
+			expectedErr:         sentinelerrors.ErrInsufficientBalance,
 		},
 		{
-			name:                 "should return nil response and error when transfer in repo failed",
-			sourceWalletId:       0,
-			DestionationWalletId: 0,
-			transferDto:          &dto.TransferDto{},
-			firstMockResult:      &entity.Wallet{},
-			firstMockErr:         nil,
-			thirdMockResult:      nil,
-			thirdMockErr:         errors.New("transfer error"),
-			expectedResult:       nil,
-			expectedErr:          errors.New("transfer error"),
+			name:                "should return nil response and error when transfer in repo failed",
+			sourceWalletId:      0,
+			DestinationWalletId: 0,
+			transferDto:         &dto.TransferDto{},
+			firstMockResult:     &entity.Wallet{},
+			firstMockErr:        nil,
+			secondMockResult:    &entity.Wallet{},
+			secondMockErr:       nil,
+			thirdMockResult:     nil,
+			thirdMockErr:        errors.New("transfer error"),
+			expectedResult:      nil,
+			expectedErr:         errors.New("transfer error"),
 		},
 	}
 
@@ -163,7 +173,11 @@ func TestTransfer(t *testing.T) {
 
 		mockWalletRepo.On("GetWalletById", testCase.sourceWalletId).Return(testCase.firstMockResult, testCase.firstMockErr)
 
-		if testCase.firstMockErr == nil && testCase.firstMockResult.Amount >= testCase.transferDto.Amount {
+		if testCase.firstMockErr == nil {
+			mockWalletRepo.On("GetWalletById", testCase.DestinationWalletId).Return(testCase.secondMockResult, testCase.secondMockErr)
+		}
+
+		if testCase.firstMockErr == nil && testCase.firstMockResult.Amount >= testCase.transferDto.Amount && testCase.secondMockErr == nil {
 			mockWalletRepo.On("Transfer", testCase.sourceWalletId, testCase.transferDto).Return(testCase.thirdMockResult, testCase.thirdMockErr)
 		}
 
