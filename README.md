@@ -28,6 +28,7 @@
   - Usecase
     - Register
     - Login
+    - Get Transactions
 
 
 ### Not Done

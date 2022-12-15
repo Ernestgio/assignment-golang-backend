@@ -1,4 +1,6 @@
 mode: set
+assignment-golang-backend/usecase/transaction_usecase.go:20.72,22.2 1 1
+assignment-golang-backend/usecase/transaction_usecase.go:24.161,26.2 1 1
 assignment-golang-backend/usecase/user_usecase.go:27.51,29.2 1 1
 assignment-golang-backend/usecase/user_usecase.go:31.80,32.58 1 1
 assignment-golang-backend/usecase/user_usecase.go:35.2,37.16 2 1
@@ -29,5 +31,3 @@ assignment-golang-backend/usecase/wallet_usecase.go:53.16,55.3 1 0
 assignment-golang-backend/usecase/wallet_usecase.go:57.46,59.3 1 0
 assignment-golang-backend/usecase/wallet_usecase.go:62.16,64.3 1 0
 assignment-golang-backend/usecase/wallet_usecase.go:67.16,69.3 1 0
-assignment-golang-backend/usecase/transaction_usecase.go:20.72,22.2 1 0
-assignment-golang-backend/usecase/transaction_usecase.go:24.161,26.2 1 0
