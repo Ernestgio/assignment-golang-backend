@@ -1,0 +1,159 @@
+openapi: 3.0.3
+info:
+  title: Library API
+  description:
+    Library provides API for borrow and return a book to the online library
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: giovanni.ernest@shopee.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: book
+    description: Everything about your Books
+  - name: borrow
+    description: borrowing books
+  - name: login
+    description: login
+security:
+ - BearerAuth: []
+paths:
+  /books:
+    get:
+      tags:
+        - book
+      summary: Finds All books
+      description: Available book on library
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'          
+        '500':
+          description: Internal server error
+      security:
+        - BearerAuth: []
+    post:
+      tags:
+        - book
+      summary: Finds All books
+      description: Create new book
+      requestBody:
+        description: Create new book in library
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookDto'
+        required: true
+      responses:
+        '201':
+          description: Successful create book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDto'
+        '500':
+          description: Internal server error
+  /borrow:
+    post:
+      tags:
+        - borrow
+      summary: Borrow books
+      description: Create new borrowing record
+      requestBody:
+        description: Create new borrowing record in db in library
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BorrowDto'
+        required: true
+      responses:
+        '201':
+          description: Successful create new borrowing record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BorrowDto'
+        '500':
+          description: Internal server error
+      security:
+        - BearerAuth: []
+components:
+  schemas:
+    Book:
+      required:
+        - id
+        - title
+        - quantity
+        - author_id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        title:
+          type: string
+          example: clean code
+        description:
+          type: string
+          example: Refactoring to clean code
+        quantity:
+          type: integer
+          format: int64
+          example: 1
+        cover:
+          type: string
+          example: http://image.com
+    BookDto:
+      required:
+        - title
+        - description
+        - quantity
+        - author_id
+      type: object
+      properties:
+        title:
+          type: string
+          example: Harry Potter
+        description:
+          type: string
+          example: Another good book
+        quantity:
+          type: integer
+          format: int64
+          example: 10
+        author_id:
+          type: integer
+          format: int64
+          example: 1
+    BorrowDto:
+      required:
+        - book_id
+        - user_id
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: int64
+          example: 1
+        book_id:
+          type: integer
+          format: int64
+          example: 26
+    
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer

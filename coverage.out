@@ -31,12 +31,14 @@ assignment-golang-backend/usecase/wallet_usecase.go:53.16,55.3 1 1
 assignment-golang-backend/usecase/wallet_usecase.go:57.46,59.3 1 1
 assignment-golang-backend/usecase/wallet_usecase.go:62.22,64.3 1 0
 assignment-golang-backend/usecase/wallet_usecase.go:67.16,69.3 1 1
-assignment-golang-backend/handler/transaction_handler.go:12.60,21.20 7 0
-assignment-golang-backend/handler/transaction_handler.go:27.2,28.16 2 0
-assignment-golang-backend/handler/transaction_handler.go:32.2,32.37 1 0
-assignment-golang-backend/handler/transaction_handler.go:21.20,23.3 1 0
-assignment-golang-backend/handler/transaction_handler.go:23.8,25.3 1 0
-assignment-golang-backend/handler/transaction_handler.go:28.16,31.3 2 0
+assignment-golang-backend/handler/handler.go:24.32,30.2 1 1
+assignment-golang-backend/handler/handler.go:32.50,34.2 1 1
+assignment-golang-backend/handler/transaction_handler.go:12.60,21.20 7 1
+assignment-golang-backend/handler/transaction_handler.go:27.2,28.16 2 1
+assignment-golang-backend/handler/transaction_handler.go:32.2,32.37 1 1
+assignment-golang-backend/handler/transaction_handler.go:21.20,23.3 1 1
+assignment-golang-backend/handler/transaction_handler.go:23.8,25.3 1 1
+assignment-golang-backend/handler/transaction_handler.go:28.16,31.3 2 1
 assignment-golang-backend/handler/user_handler.go:13.44,20.16 4 1
 assignment-golang-backend/handler/user_handler.go:24.2,24.34 1 1
 assignment-golang-backend/handler/user_handler.go:20.16,23.3 2 1
@@ -52,5 +54,3 @@ assignment-golang-backend/handler/wallet_handler.go:19.16,22.3 2 1
 assignment-golang-backend/handler/wallet_handler.go:26.44,32.16 5 1
 assignment-golang-backend/handler/wallet_handler.go:36.2,36.41 1 1
 assignment-golang-backend/handler/wallet_handler.go:32.16,35.3 2 1
-assignment-golang-backend/handler/handler.go:24.32,30.2 1 1
-assignment-golang-backend/handler/handler.go:32.50,34.2 1 1

@@ -25,6 +25,7 @@ func NewRouter(cfg *RouterConfig) *gin.Engine {
 
 	m := middleware.NewMiddleware(&middleware.MiddlewareConfig{HashUtil: hashutils.NewHashUtils()})
 
+	router.Static("/docs", "swagger-ui")
 	router.POST("/register", m.LoginRegisterMiddleware(), h.Register)
 	router.POST("/login", m.LoginRegisterMiddleware(), h.Login)
 
@@ -37,7 +38,7 @@ func NewRouter(cfg *RouterConfig) *gin.Engine {
 	transactionGroup := router.Group("/transactions")
 	transactionGroup.Use(m.AuthMiddleware())
 	{
-		transactionGroup.GET("/", h.GetTransactionWithParams)
+		transactionGroup.GET("", h.GetTransactionWithParams)
 		transactionGroup.POST("/topup", m.TopupMiddleware(), h.Topup)
 		transactionGroup.POST("/transfer", m.TransferMiddleware(), h.Transfer)
 	}

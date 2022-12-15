@@ -33,6 +33,8 @@
     - No Route
     - user handler (login, get detail, register)
     - wallet handler (topup, transfer)
+    - Body and Auth middleware test is implicit with route http request (400 bad request test cases)
+    - Transaction list
 
 
 ### Not Done
@@ -40,3 +42,4 @@
 - ERD
 - Seeding
 - Swagger Documentation
+- utils test
