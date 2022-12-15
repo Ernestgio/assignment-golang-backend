@@ -22,3 +22,16 @@ func (h *Handler) Topup(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, topupResponse)
 }
+
+func (h *Handler) Transfer(c *gin.Context) {
+	var request *dto.TransferDto
+	c.ShouldBindBodyWith(&request, binding.JSON)
+	walletId := c.GetInt(appconstants.WalletContextKey)
+	transferResponse, err := h.walletUsecase.Transfer(walletId, request)
+
+	if err != nil {
+		utils.ResponseWithError(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, transferResponse)
+}

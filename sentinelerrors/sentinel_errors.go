@@ -8,6 +8,8 @@ var ErrEmailNotExists = errors.New("email not exist")
 var ErrInvalidPassword = errors.New("invalid password")
 var ErrWalletNotExists = errors.New("wallet not exist")
 var ErrSourceOfFundIdNotExists = errors.New("source of fund id not exist")
+var ErrInsufficientBalance = errors.New("insufficient balance")
+var ErrDestinationWalletNotExists = errors.New("target wallet not exist")
 
 // standard error
 var ErrInternalServerError = errors.New("internal server error")

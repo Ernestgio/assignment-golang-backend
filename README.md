@@ -16,13 +16,19 @@
   - Amount validation
   - Description formatting
   - Record to transactions
-  
+
+- Transfer
+  - Negative case
+  - Body validation
+  - Record to transactions  
+
 - Users detail With Auth Middleware
 
 
 ### Not Done
 - Pagination optionals
-- Transfer functions
 - ERD
 - Seeding
 - Swagger Documentation
+- All usecase unit test
+- All handler unit test

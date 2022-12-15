@@ -5,12 +5,14 @@ import (
 	"assignment-golang-backend/dto"
 	"assignment-golang-backend/entity"
 	"assignment-golang-backend/repository"
+	"assignment-golang-backend/sentinelerrors"
 	"fmt"
 )
 
 type WalletUsecase interface {
 	GetWalletById(id int) (*entity.Wallet, error)
 	Topup(walletId int, topUpAmt int, sourceOfFundId int) (*dto.TopUpResponseDto, error)
+	Transfer(sourceWalletId int, transferDto *dto.TransferDto) (*dto.TransferDto, error)
 }
 
 type walletUsecaseImpl struct {
@@ -44,4 +46,26 @@ func (u *walletUsecaseImpl) Topup(walletId int, topUpAmt int, sourceOfFundId int
 	}
 	topupResult.TransactionStatus = appconstants.TopupSuccess
 	return topupResult, nil
+}
+
+func (u *walletUsecaseImpl) Transfer(sourceWalletId int, transferDto *dto.TransferDto) (*dto.TransferDto, error) {
+	sourceWallet, err := u.walletRepository.GetWalletById(sourceWalletId)
+	if err != nil {
+		return nil, err
+	}
+
+	if sourceWallet.Amount < transferDto.Amount {
+		return nil, sentinelerrors.ErrInsufficientBalance
+	}
+
+	_, err = u.walletRepository.GetWalletById(transferDto.To)
+	if err != nil {
+		return nil, sentinelerrors.ErrDestinationWalletNotExists
+	}
+
+	transferResult, err := u.walletRepository.Transfer(sourceWalletId, transferDto)
+	if err != nil {
+		return nil, err
+	}
+	return transferResult, nil
 }

@@ -4,8 +4,6 @@ const (
 	// Business rules
 	NoRowsAffected = 0
 	ZeroBalance    = 0
-	NoSourceOfFund = 0
-	NoSourceWallet = 0
 
 	// JWT
 	DaysTokenActive = 30
@@ -16,7 +14,8 @@ const (
 	WalletContextKey = "walletId"
 
 	//	Transaction Type Enum
-	TopUpTransactionType = "Topup"
+	TopUpTransactionType    = "Topup"
+	TransferTransactionType = "Transfer"
 
 	// Topup Status Description
 	TopupUncertain = ""

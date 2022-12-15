@@ -39,6 +39,7 @@ func NewRouter(cfg *RouterConfig) *gin.Engine {
 	{
 		transactionGroup.GET("/", h.GetTransactionWithParams)
 		transactionGroup.POST("/topup", m.TopupMiddleware(), h.Topup)
+		transactionGroup.POST("/transfer", m.TransferMiddleware(), h.Transfer)
 	}
 
 	router.NoRoute(h.HandleNotFound)
