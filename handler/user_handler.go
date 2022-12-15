@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"assignment-golang-backend/appconstants"
 	"assignment-golang-backend/dto"
 	"assignment-golang-backend/utils"
 	"net/http"
@@ -46,7 +47,7 @@ func (h *Handler) Login(c *gin.Context) {
 }
 
 func (h *Handler) GetUserById(c *gin.Context) {
-	id := c.GetInt("userId")
+	id := c.GetInt(appconstants.UserContextKey)
 	user, err := h.userUsecase.GetUserById(id)
 	if err != nil {
 		utils.ResponseWithError(c, http.StatusInternalServerError, err.Error())

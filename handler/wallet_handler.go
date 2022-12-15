@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"assignment-golang-backend/appconstants"
 	"assignment-golang-backend/dto"
 	"assignment-golang-backend/utils"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,8 +13,7 @@ import (
 func (h *Handler) Topup(c *gin.Context) {
 	var request *dto.TopupRequestDto
 	c.ShouldBindBodyWith(&request, binding.JSON)
-	walletId := c.GetInt("walletId")
-	fmt.Println("walletId: ", walletId)
+	walletId := c.GetInt(appconstants.WalletContextKey)
 	topupResponse, err := h.walletUsecase.Topup(walletId, request.Amount, request.SourceOfFundId)
 
 	if err != nil {

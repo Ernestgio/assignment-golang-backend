@@ -11,6 +11,10 @@ const (
 	DaysTokenActive = 30
 	HoursInADay     = 24
 
+	// Context Keys
+	UserContextKey   = "userId"
+	WalletContextKey = "walletId"
+
 	//	Transaction Type Enum
 	TopUpTransactionType = "Topup"
 
@@ -22,12 +26,25 @@ const (
 	TopupDescription = "Top Up from %v"
 
 	// List of Transactions Query Params Key
-	TransactionSortOrderKey  = "sortBy"
-	TransactionSortColumnKey = "sort"
+	TransactionSortOrderKey  = "sort"
+	TransactionSortColumnKey = "sortBy"
 	TransactionSearchKey     = "s"
+	TransactionLimitKey      = "limit"
+	TransactionPageKey       = "page"
+
+	// Allowed sort columns
+	TransactionTo     = "to"
+	TransactionDate   = "date"
+	TransactionAmount = "amount"
+
+	// Mapped sort columns (column name in database)
+	TransactionToDbColumn     = "destination_wallet_id"
+	TransactionDateDbColumn   = "created_at"
+	TransactionAmountDbColumn = "amount"
 
 	// List of Transactions Default Query Params Value
 	TransactionDefaultLimit      = 10
+	TransactionDefaultPage       = 1
 	TransactionDefaultSortColumn = "created_at"
 	TransactionDefaultSortOrder  = "desc"
 	TransactionDefaultSearch     = ""

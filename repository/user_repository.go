@@ -3,7 +3,6 @@ package repository
 import (
 	"assignment-golang-backend/appconstants"
 	"assignment-golang-backend/entity"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -54,7 +53,6 @@ func (u *userRepositoryImpl) Register(newUser *entity.User) (*entity.User, error
 func (u *userRepositoryImpl) GetUserByEmail(email string) (*entity.User, error) {
 	user := &entity.User{}
 	err := u.db.Preload("Wallet").Where("email = ?", email).First(user).Error
-	fmt.Println(user)
 	return user, err
 }
 

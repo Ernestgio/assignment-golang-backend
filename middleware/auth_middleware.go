@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"assignment-golang-backend/appconstants"
 	"assignment-golang-backend/sentinelerrors"
 	"net/http"
 	"strings"
@@ -20,8 +21,8 @@ func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 					c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
 					return
 				}
-				c.Set("userId", claim.Id)
-				c.Set("walletId", claim.WalletId)
+				c.Set(appconstants.UserContextKey, claim.Id)
+				c.Set(appconstants.WalletContextKey, claim.WalletId)
 				c.Next()
 				return
 			}
