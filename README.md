@@ -27,9 +27,13 @@
 - Unit Test
   - Usecase
     - Register
-    - Login
+    - Login 
     - Get Transactions
     - Topup
+    - Transfer (Almost 100%)
+  - Handler
+    - No Route
+    - user handler (login, get detail, register)
 
 
 ### Not Done
@@ -37,4 +41,3 @@
 - ERD
 - Seeding
 - Swagger Documentation
-- All handler unit test

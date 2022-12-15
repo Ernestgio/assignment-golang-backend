@@ -13,11 +13,7 @@ import (
 func (h *Handler) Register(c *gin.Context) {
 	var request dto.UserDto
 
-	err := c.ShouldBindBodyWith(&request, binding.JSON)
-	if err != nil {
-		utils.ResponseWithError(c, http.StatusInternalServerError, err.Error())
-		return
-	}
+	c.ShouldBindBodyWith(&request, binding.JSON)
 
 	user, err := h.userUsecase.Register(&request)
 
@@ -30,13 +26,7 @@ func (h *Handler) Register(c *gin.Context) {
 
 func (h *Handler) Login(c *gin.Context) {
 	var request dto.UserDto
-
-	err := c.ShouldBindBodyWith(&request, binding.JSON)
-	if err != nil {
-		utils.ResponseWithError(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
+	c.ShouldBindBodyWith(&request, binding.JSON)
 	token, err := h.userUsecase.Login(&request)
 
 	if err != nil {

@@ -176,7 +176,43 @@ func TestTransfer(t *testing.T) {
 }
 
 func TestGetWalletById(t *testing.T) {
-	
-}
+	testCases := []struct {
+		name           string
+		id             int
+		mockResult     *entity.Wallet
+		mockErr        error
+		expectedResult *entity.Wallet
+		expectedErr    error
+	}{
+		{
+			name:           "should return apropriate response and nil error when get wallet successful",
+			id:             0,
+			mockResult:     &entity.Wallet{},
+			mockErr:        nil,
+			expectedResult: &entity.Wallet{},
+			expectedErr:    nil,
+		},
+		{
+			name:           "should return nil response and error when get wallet failed",
+			id:             0,
+			mockResult:     nil,
+			mockErr:        sentinelerrors.ErrWalletNotExists,
+			expectedResult: nil,
+			expectedErr:    sentinelerrors.ErrWalletNotExists,
+		},
+	}
 
+	for _, testCase := range testCases {
+		mockWalletRepo := mocks.NewWalletRepository(t)
+		useCase := usecase.NewWalletUsecase(&usecase.WalletUConfig{
+			WalletRepository: mockWalletRepo,
+		})
+
+		mockWalletRepo.On("GetWalletById", testCase.id).Return(testCase.mockResult, testCase.mockErr)
+
+		res, err := useCase.GetWalletById(testCase.id)
+
+		assert.Equal(t, testCase.expectedErr, err)
+		assert.Equal(t, testCase.expectedResult, res)
+	}
 }
