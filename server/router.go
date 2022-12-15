@@ -25,7 +25,7 @@ func NewRouter(cfg *RouterConfig) *gin.Engine {
 
 	m := middleware.NewMiddleware(&middleware.MiddlewareConfig{HashUtil: hashutils.NewHashUtils()})
 
-	router.Static("/docs", "swagger-ui")
+	router.Static("/documentations", "swagger-ui")
 	router.POST("/register", m.LoginRegisterMiddleware(), h.Register)
 	router.POST("/login", m.LoginRegisterMiddleware(), h.Login)
 

@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  title: Library API
+  title: Golang backend Assignment (Bank) - Ernest Giovanni
   description:
-    Library provides API for borrow and return a book to the online library
+    Banking API where user can topup and transfer 
   termsOfService: http://swagger.io/terms/
   contact:
     email: giovanni.ernest@shopee.com
@@ -16,142 +16,369 @@ externalDocs:
 servers:
   - url: http://localhost:8080
 tags:
-  - name: book
-    description: Everything about your Books
-  - name: borrow
-    description: borrowing books
+  - name: register
+    description: Path for register
   - name: login
-    description: login
+    description: Path for login
+  - name: users
+    description: Path for users to get their information details
+  - name: transactions
+    description: Path for users to make a topup, transaction, and see their transaction details
+
+  
 security:
  - BearerAuth: []
 paths:
-  /books:
-    get:
+  /register:
+    post:
       tags:
-        - book
-      summary: Finds All books
-      description: Available book on library
+        - register
+      summary: Access for new users to register
+      description: Register new users from their email and password
+      requestBody:
+        description: Body to register new user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequestBody'
       responses:
-        '200':
-          description: successful operation
+        '201':
+          description: successful registration
           content:
             application/json:
+              schema:
+                $ref: '#/components/schemas/User'    
+        '400':
+          description: Failed to register, Bad body request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '500':
+          description: Failed to register, internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+                
+  /login:
+    post:
+      tags:
+        - login
+      summary: Access for users to login
+      description: log users in from their email and password
+      requestBody:
+        description: Body for login
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequestBody'
+      responses:
+        '200':
+          description: successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'  
+        '400':
+          description: Failed to login, Bad body request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+                
+  /users:
+    get:
+      tags:
+        - users
+      summary: Find users by their id
+      description: Find email, password, and wallet info based on users token
+      responses:
+        '200':
+          description: Successful get user
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized if header not exists or token invalid
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      security:
+        - BearerAuth: []
+  
+  /transactions:
+    get:
+      tags:
+        - transactions
+      summary: Get List of users transactions with sort, search, and limit results
+      description: Get List of topup and transfer user transactions based from their token. Receives query params for search, sort columns (to, date, and amount), sort order, and limit results. Requires bearer token
+      parameters:
+        - name: s
+          in: query
+          description: search key to search for transaction description / remarks
+          schema:
+            type: string
+            example: monthly payment
+        - name: sortBy
+          in: query
+          description: columns to sort by, only receives "date", "to", or "amount", default sort by date
+          schema:
+            type: string
+            example: amount
+        - name: sort
+          in: query
+          description: params to return result order (ascending or descending), only receives "asc" or "desc", defatult sort descending
+          schema:
+            type: string
+            example: desc
+        - name: limit
+          in: query
+          description: params to limit result amounts, default 10
+          schema:
+            type: string
+            example: 5
+      responses:
+        '200':
+          description: Successful get user, if transaction_type is Topup, source_wallet_id field will be omitted, if transaction_type is Transfer, source_of_fund_id will be omitted
+          content:
+            aplication/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Book'          
+                  $ref: '#/components/schemas/Transaction'
+        '401':
+          description: Unauthorized if header not exists or token invalid
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
         '500':
           description: Internal server error
-      security:
-        - BearerAuth: []
-    post:
-      tags:
-        - book
-      summary: Finds All books
-      description: Create new book
-      requestBody:
-        description: Create new book in library
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BookDto'
-        required: true
-      responses:
-        '201':
-          description: Successful create book
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookDto'
-        '500':
-          description: Internal server error
-  /borrow:
+                $ref: '#/components/schemas/ErrorBody'
+      security:
+        - BearerAuth: []
+  
+  /transactions/topup:
     post:
       tags:
-        - borrow
-      summary: Borrow books
-      description: Create new borrowing record
+        - transactions
+      summary: Access for users to topup
+      description: Allows users to topup with min. 50000 amount and max. 10000000 (10 mil.) amount. Requires bearer token
       requestBody:
-        description: Create new borrowing record in db in library
+        description: Body for topup
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BorrowDto'
-        required: true
+              $ref: '#/components/schemas/TopupRequestBody'
       responses:
-        '201':
-          description: Successful create new borrowing record
+        '200':
+          description: successful topup
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BorrowDto'
+                $ref: '#/components/schemas/TopupResponseBody'  
+        '400':
+          description: Failed to topup, Bad body request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
         '500':
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
       security:
         - BearerAuth: []
+        
+  /transactions/transfer:
+    post:
+      tags:
+        - transactions
+      summary: Access for users to transfer
+      description: Allows users to topup with min. 1000 amount and max. 50000000 (50 mil.) amount. Requires bearer token
+      requestBody:
+        description: Body for transfer request, description maximum length is 35 chars, if more, will return bad request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferDto'
+      responses:
+        '200':
+          description: successful topup
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferDto'
+        '400':
+          description: Failed to transfer, Bad body request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      security:
+        - BearerAuth: []
+        
+  
 components:
   schemas:
-    Book:
+    UserRequestBody:
       required:
-        - id
-        - title
-        - quantity
-        - author_id
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+          example: myemail@email.com
+        password:
+          type: string
+          example: secretpassword
+          
+    Wallet:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 888001
+        amount:
+          type: integer
+          format: int64
+          example: 1000000
+        user__id:
+          type: integer
+          format: int64
+          example: 10
+          
+    User:
       type: object
       properties:
         id:
           type: integer
           format: int64
           example: 10
-        title:
+        email:
           type: string
-          example: clean code
-        description:
-          type: string
-          example: Refactoring to clean code
-        quantity:
-          type: integer
-          format: int64
-          example: 1
-        cover:
-          type: string
-          example: http://image.com
-    BookDto:
-      required:
-        - title
-        - description
-        - quantity
-        - author_id
+          example: myemail@email.com
+        wallet:
+          $ref: '#/components/schemas/Wallet'
+          
+    ErrorBody:
       type: object
       properties:
-        title:
+        message:
           type: string
-          example: Harry Potter
-        description:
-          type: string
-          example: Another good book
-        quantity:
-          type: integer
-          format: int64
-          example: 10
-        author_id:
-          type: integer
-          format: int64
-          example: 1
-    BorrowDto:
-      required:
-        - book_id
-        - user_id
+          example: internal server error 
+          
+    LoginResponse:
       type: object
       properties:
-        user_id:
+        access_token:
+          type: string
+          
+    Transaction:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+        amount:
           type: integer
           format: int64
-          example: 1
-        book_id:
+          example: 250000
+        destination_wallet_id:
           type: integer
           format: int64
-          example: 26
+          example: 888070
+        description:
+          type: string
+          example: this month bills
+        transaction_type:
+          type: string
+          example: Topup
+        source_of_fund_id:
+          type: integer
+          format: int64
+          example: 2
+        source_vallet_id:
+          type: integer
+          format: int64
+          example: 888071
+        
+    TopupRequestBody:
+      type: object
+      properties:
+        amount:
+          type: integer
+          format: int64
+          example: 500000
+        source_of_fund_id:
+          type: integer
+          format: int64
+          example: 3
+    
+    TopupResponseBody:
+      type: object
+      properties:
+        amount:
+          type: integer
+          format: int64
+          example: 500000
+        source_of_fund_id:
+          type: integer
+          format: int64
+          example: 3
+        destination_wallet_id:
+          type: integer
+          format: int64
+          example: 888072
+        description:
+          type: string
+          example: Top up from Credit Card
+        transaction_status:
+          type: string
+          example: Success
+    
+    TransferDto:
+      type: object
+      properties:
+        to:
+          type: integer
+          format: int64
+          example: 888073
+        amount:
+          type: integer
+          format: int64
+          example: 750000
+        description:
+          type: string
+          example: Transfer for medicine
     
   securitySchemes:
     BearerAuth:
