@@ -26,14 +26,13 @@
 
 - Unit Test
   - Usecase
-    - Register
-    - Login 
+    - Register and login 
     - Get Transactions
-    - Topup
-    - Transfer (Almost 100%)
+    - Topup & Transfer (95.7% on transfer)
   - Handler
     - No Route
     - user handler (login, get detail, register)
+    - wallet handler (topup, transfer)
 
 
 ### Not Done
