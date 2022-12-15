@@ -1,6 +1,10 @@
 package config
 
-import "os"
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 type dbConfig struct {
 	Host     string
@@ -11,6 +15,7 @@ type dbConfig struct {
 }
 
 func getENV(key, defaultVal string) string {
+	godotenv.Load()
 	env := os.Getenv(key)
 	if env == "" {
 		return defaultVal
@@ -26,7 +31,7 @@ var (
 		Host:     getENV("DB_HOST", "localhost"),
 		User:     getENV("DB_USER", "postgres"),
 		Password: getENV("DB_PASSWORD", "postgres"),
-		DBName:   getENV("DB_NAME", "bank"),
+		DBName:   getENV("DB_NAME", "wallet_db_ernest"),
 		Port:     getENV("DB_PORT", "5432"),
 	}
 )

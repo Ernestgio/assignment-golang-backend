@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  title: Golang backend Assignment (Bank) - Ernest Giovanni
+  title: Golang backend Assignment (E - Wallet) - Ernest Giovanni
   description:
-    Banking API where user can topup and transfer 
+    Wallet API where user can topup and transfer 
   termsOfService: http://swagger.io/terms/
   contact:
     email: giovanni.ernest@shopee.com
