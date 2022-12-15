@@ -29,6 +29,7 @@
     - Register
     - Login
     - Get Transactions
+    - Topup
 
 
 ### Not Done

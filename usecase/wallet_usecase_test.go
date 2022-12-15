@@ -1,0 +1,93 @@
+package usecase_test
+
+import (
+	"assignment-golang-backend/appconstants"
+	"assignment-golang-backend/dto"
+	"assignment-golang-backend/entity"
+	mocks "assignment-golang-backend/mocks/repository"
+	"assignment-golang-backend/sentinelerrors"
+	"assignment-golang-backend/usecase"
+	"errors"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestTopup(t *testing.T) {
+	testCases := []struct {
+		name                 string
+		walletId             int
+		topUpAmt             int
+		sourceOfFundId       int
+		description          string
+		formattedDescription string
+		firstMockResult      *entity.SourceOfFund
+		firstMockErr         error
+		secondMockResult     *dto.TopUpResponseDto
+		secondMockErr        error
+		expectedResult       *dto.TopUpResponseDto
+		expectedErr          error
+	}{
+		{
+			name:                 "should return apropriate response and nil error when topup successful and get source_of_fund successful",
+			walletId:             777777,
+			topUpAmt:             500000,
+			sourceOfFundId:       1,
+			description:          "",
+			formattedDescription: "Top Up from ",
+			firstMockResult:      &entity.SourceOfFund{},
+			firstMockErr:         nil,
+			secondMockResult:     &dto.TopUpResponseDto{},
+			secondMockErr:        nil,
+			expectedResult:       &dto.TopUpResponseDto{Description: "", TransactionStatus: appconstants.TopupSuccess},
+			expectedErr:          nil,
+		},
+		{
+			name:                 "should return nil response and error when topup successful but get source_of_fund failed",
+			walletId:             777777,
+			topUpAmt:             500000,
+			sourceOfFundId:       1,
+			description:          "",
+			formattedDescription: "Top Up from ",
+			firstMockResult:      nil,
+			firstMockErr:         sentinelerrors.ErrSourceOfFundIdNotExists,
+			secondMockResult:     &dto.TopUpResponseDto{},
+			secondMockErr:        nil,
+			expectedResult:       nil,
+			expectedErr:          sentinelerrors.ErrSourceOfFundIdNotExists,
+		},
+		{
+			name:                 "should return nil response and error when topup failed but get source_of_fund succeed",
+			walletId:             777777,
+			topUpAmt:             500000,
+			sourceOfFundId:       1,
+			description:          "",
+			formattedDescription: "Top Up from ",
+			firstMockResult:      &entity.SourceOfFund{},
+			firstMockErr:         nil,
+			secondMockResult:     nil,
+			secondMockErr:        errors.New("db failed"),
+			expectedResult:       nil,
+			expectedErr:          errors.New("db failed"),
+		},
+	}
+
+	for _, testCase := range testCases {
+		mockWalletRepo := mocks.NewWalletRepository(t)
+		mockSOFRepo := mocks.NewSourceOfFundRepository(t)
+		useCase := usecase.NewWalletUsecase(&usecase.WalletUConfig{
+			WalletRepository:       mockWalletRepo,
+			SourceOfFundRepository: mockSOFRepo,
+		})
+		mockSOFRepo.On("GetSourceOfFundById", testCase.sourceOfFundId).Return(testCase.firstMockResult, testCase.firstMockErr)
+
+		if testCase.firstMockErr == nil {
+			mockWalletRepo.On("Topup", testCase.walletId, testCase.topUpAmt, testCase.sourceOfFundId, testCase.formattedDescription).Return(testCase.secondMockResult, testCase.secondMockErr)
+		}
+
+		res, err := useCase.Topup(testCase.walletId, testCase.topUpAmt, testCase.sourceOfFundId)
+
+		assert.Equal(t, testCase.expectedErr, err)
+		assert.Equal(t, testCase.expectedResult, res)
+	}
+}
