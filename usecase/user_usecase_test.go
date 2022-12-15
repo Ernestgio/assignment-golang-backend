@@ -27,7 +27,7 @@ func TestRegister(t *testing.T) {
 		expectedResult     *entity.User
 	}{
 		{
-			name:               "Should return nil error and valid result when register request is valid and successful",
+			name:               "should return nil error and valid result when register request is valid and successful",
 			requestDto:         &dto.UserDto{},
 			requestUser:        &entity.User{},
 			mockIsUserExist:    false,
@@ -39,7 +39,7 @@ func TestRegister(t *testing.T) {
 			expectedResult:     &entity.User{},
 		},
 		{
-			name:               "Should return error and nil result when register request email already exists",
+			name:               "should return error and nil result when register request email already exists",
 			requestDto:         &dto.UserDto{},
 			requestUser:        &entity.User{},
 			mockIsUserExist:    true,
@@ -51,7 +51,7 @@ func TestRegister(t *testing.T) {
 			expectedResult:     nil,
 		},
 		{
-			name:               "Should return error and nil result when hashUtils fails to hash",
+			name:               "should return error and nil result when hashUtils fails to hash",
 			requestDto:         &dto.UserDto{},
 			requestUser:        &entity.User{},
 			mockIsUserExist:    false,
@@ -101,7 +101,7 @@ func TestLogin(t *testing.T) {
 		expectedResult     *dto.LoginResponse
 	}{
 		{
-			name:               "Should Return nil error and login response when user exists and compare succesful",
+			name:               "should Return nil error and login response when user exists and compare succesful",
 			requestDto:         &dto.UserDto{},
 			mockGetUserByEmail: &entity.User{},
 			mockGetuserErr:     nil,
@@ -112,7 +112,7 @@ func TestLogin(t *testing.T) {
 			expectedResult:     &dto.LoginResponse{},
 		},
 		{
-			name:               "Should Return error and nil login response when does not exists",
+			name:               "should Return error and nil login response when does not exists",
 			requestDto:         &dto.UserDto{},
 			mockGetUserByEmail: nil,
 			mockGetuserErr:     sentinelerrors.ErrEmailNotExists,
@@ -123,7 +123,7 @@ func TestLogin(t *testing.T) {
 			expectedResult:     nil,
 		},
 		{
-			name:               "Should Return error and nil login response when password compare does not match",
+			name:               "should Return error and nil login response when password compare does not match",
 			requestDto:         &dto.UserDto{},
 			mockGetUserByEmail: &entity.User{},
 			mockGetuserErr:     nil,
@@ -134,7 +134,7 @@ func TestLogin(t *testing.T) {
 			expectedResult:     nil,
 		},
 		{
-			name:               "Should Return error and nil login response when password compare does not match",
+			name:               "should Return error and nil login response when password compare does not match",
 			requestDto:         &dto.UserDto{},
 			mockGetUserByEmail: &entity.User{},
 			mockGetuserErr:     nil,
@@ -145,7 +145,7 @@ func TestLogin(t *testing.T) {
 			expectedResult:     nil,
 		},
 		{
-			name:               "Should Return error and nil login response when fail to generate access token",
+			name:               "should Return error and nil login response when fail to generate access token",
 			requestDto:         &dto.UserDto{},
 			mockGetUserByEmail: &entity.User{},
 			mockGetuserErr:     nil,
@@ -180,4 +180,35 @@ func TestLogin(t *testing.T) {
 		assert.Equal(t, testCase.expectedResult, res)
 		assert.Equal(t, testCase.expectedError, err)
 	}
+}
+
+func TestGetUserById(t *testing.T) {
+	t.Run("should return nil error and user when repository succesfully get data", func(t *testing.T) {
+		mockRepo := mocks.NewUserRepository(t)
+		useCase := usecase.NewUserUsecase(&usecase.UserUConfig{
+			UserRepository: mockRepo,
+		})
+
+		mockRepo.On("GetUserById", 1).Return(&entity.User{}, nil)
+
+		res, err := useCase.GetUserById(1)
+
+		assert.Equal(t, &entity.User{}, res)
+		assert.Nil(t, err)
+	})
+
+	t.Run("should return error and nil user when repository failed to get data", func(t *testing.T) {
+		mockRepo := mocks.NewUserRepository(t)
+		useCase := usecase.NewUserUsecase(&usecase.UserUConfig{
+			UserRepository: mockRepo,
+		})
+
+		var dummyError error = errors.New("dummy error")
+		mockRepo.On("GetUserById", 1).Return(nil, dummyError)
+
+		res, err := useCase.GetUserById(1)
+
+		assert.Nil(t, res)
+		assert.Equal(t, dummyError, err)
+	})
 }
