@@ -63,6 +63,9 @@ On A side note, this db dummy data has 5 email & password pair. The password, ho
     - wallet handler (topup, transfer)
     - Body and Auth middleware test is implicit with route http request (400 bad request test cases)
     - Transaction list
+  - Utils
+    - Hash Utils test (not complete)
+    - Utils test (not 100%)
 
 - Swagger Documentation (served statically on /documentations route)
 
@@ -72,5 +75,4 @@ On A side note, this db dummy data has 5 email & password pair. The password, ho
 ### Not Done
 - Pagination optionals
 - Reset Password optionals
-- utils test
 
