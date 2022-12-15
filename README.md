@@ -24,11 +24,15 @@
 
 - Users detail With Auth Middleware
 
+- Unit Test
+  - Usecase
+    - Register
+    - Login
+
 
 ### Not Done
 - Pagination optionals
 - ERD
 - Seeding
 - Swagger Documentation
-- All usecase unit test
 - All handler unit test
